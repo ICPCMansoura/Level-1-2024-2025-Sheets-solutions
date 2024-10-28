@@ -3,28 +3,23 @@
 
 using namespace std;
 
-const int N = 1e5 + 10 , M = 2;
+const int N = 1e6 + 10 , M = 2;
 
-
-vector <int> PrimeFact;
-void PrimeFactorization(int n) {
-    for (int i = 2; i * i <= n; ++i) {
-        while (n % i == 0) {
-            PrimeFact.push_back(i);
-            n /= i;
+bool isPrime(int n) {
+    if(n == 1) return false;
+    for (int i = 2; i * i <= n; i++) {
+        if(n % i == 0) {
+            return false;
         }
     }
-    if (n > 1)
-        PrimeFact.push_back(n);
+    return true;
 }
-
 void solve()
 {
     int n; cin >> n;
-    PrimeFactorization(n);
-    sort(PrimeFact.begin(), PrimeFact.end());
 
-    for (int p : PrimeFact) cout << p << ' ';
+    if(isPrime(n)) cout << "YES\n";
+    else cout << "NO\n";
 }
 
 signed main() {
@@ -35,9 +30,8 @@ signed main() {
     freopen("output.txt", "w", stdout);
 #endif
 
-
     int testCases = 1;
-    //  cin >> testCases;
+   // cin >> testCases;
     for (int testCase = 1 ; testCase <= testCases ; ++testCase){
         solve();
     }
