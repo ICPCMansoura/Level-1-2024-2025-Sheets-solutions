@@ -1,49 +1,62 @@
 #include <bits/stdc++.h>
-#define int long long
-
 using namespace std;
 
 const int N = 1e6 + 10 , M = 2;
 
-vector <bool> is_prime;
-void SIEVE() {
-    // Make sure to resize the vector to N
+
+vector<int> sieve(int n) {
+    vector<bool> is_prime(n + 1, true);
     is_prime[0] = is_prime[1] = false;
-    for (int i = 1; i <= N; ++i) {
-        if (not is_prime[i]) {
-            continue;
+    vector<int> primes;
+    for (int i = 2; i <= n; ++i) {
+        if (is_prime[i]) {
+            primes.push_back(i);
         }
-        for (int j = 2 * i; j <= N; j += i) {
-            is_prime[j] = false;
+        for (int p : primes) {
+            if (i * p > n) {
+                break;
+            }
+            is_prime[i * p] = false;
+            if (i % p == 0) {
+                break;
+            }
         }
     }
+    return primes;
 }
 
-
+vector<int> prime_factorization(int n, vector<int>& primes) {
+    vector<int> ret;
+    for (int i = 0; i < (int)primes.size(); ++i) {
+        if (primes[i] * primes[i] > n) {
+            break;
+        }
+        while (n % primes[i] == 0) {
+            n /= primes[i];
+            ret.push_back(primes[i]);
+        }
+    }
+    if (n != 1) {
+        ret.push_back(n);
+    }
+    return ret;
+}
 
 void solve()
 {
-    string str; cin >> str;
-    map <char , int> freq;
-    for (char c : str) {
-        freq[c]++;
+
+    vector <int> primes = sieve(1e6 + 1);
+    int q; cin >> q;
+
+    while (q--) {
+        int n; cin >> n;
+        auto ans = prime_factorization(n , primes);
+        sort(ans.begin(), ans.end());
+
+        for (int i : ans) cout << i << ' ';
+        cout << '\n';
     }
 
-    vector <char> ans;
-    for (auto &[c , x] : freq) {
-        if(is_prime[x]) {
-            ans.push_back(c);
-        }
-    }
-
-    sort(ans.begin() , ans.end());
-    if(ans.size()) {
-        for (char c : ans) {
-            cout << c;
-        }
-    } else {
-        cout << "empty";
-    }
 }
 
 signed main() {
@@ -54,14 +67,10 @@ signed main() {
     freopen("output.txt", "w", stdout);
 #endif
 
-    is_prime = vector <bool> (N , 1);
-    SIEVE();
 
     int testCases = 1;
-    cin >> testCases;
+    //  cin >> testCases;
     for (int testCase = 1 ; testCase <= testCases ; ++testCase){
-        cout << "Case " << testCase << ": ";
         solve();
-        cout << '\n';
     }
 }
