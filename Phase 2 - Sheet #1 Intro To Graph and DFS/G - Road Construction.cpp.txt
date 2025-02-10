@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define Sonic ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define int long long
+
+const int mod = 1e9 + 7;
+
+void palmer() {
+    int n, m; cin >> n >> m;
+    bool blocked[n + 1] = {false};
+    for (int i = 0; i < m; i++) {
+        int a, b; cin >> a >> b;
+        blocked[a] = blocked[b] =  true;
+    }
+    cout << n - 1 << "\n";
+    for (int i = 1; i <= n; i++) {
+        if (!blocked[i]) {
+            for (int j = 1; j <= n; j++) {
+                if (i == j)
+                    continue;
+
+                cout << i << " " << j << "\n";
+            }
+            break;
+        }
+    }
+}
+
+signed main() {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    Sonic
+    int t = 1; //cin >> t;
+    while (t--){
+        palmer();
+        if (t > 0)
+            cout << "\n";
+    }
+}

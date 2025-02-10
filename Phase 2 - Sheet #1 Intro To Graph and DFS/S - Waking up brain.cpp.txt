@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void fastio() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+}
+
+void solve() {
+    int n, m;
+    
+    while (cin >> n >> m) {
+        unordered_map<char, vector<char>> adj;
+        unordered_map<char, int> counter;
+        unordered_set<char> awake, sleep;
+        int years = 0;
+
+        for (int i = 0; i < 3; i++) {
+            char a;cin >> a;
+            awake.insert(a);
+        }
+
+        for (int i = 0; i < m; i++) {
+            char from, to;
+            cin >> from >> to;
+            adj[from].push_back(to);
+            adj[to].push_back(from);
+        }
+
+        for (auto& node : adj) {
+            char area = node.first;
+            if (awake.find(area) == awake.end()) {
+                sleep.insert(area);
+                for (char neighbor : node.second) {
+                    if (awake.find(neighbor) != awake.end()) {
+                        counter[area]++;
+                    }
+                }
+            }
+        }
+
+        while (!sleep.empty()) {
+            unordered_set<char> newlyAwake;
+            for (char area : sleep) {
+                if (counter[area] >= 3) {
+                    newlyAwake.insert(area);
+                }
+            }
+            if (newlyAwake.empty()) break;
+
+            for (char area : newlyAwake) {
+                awake.insert(area);
+                sleep.erase(area);
+                for (char neighbor : adj[area]) {
+                    if (sleep.find(neighbor) != sleep.end()) {
+                        counter[neighbor]++;
+                    }
+                }
+            }
+            years++;
+        }
+
+        if (awake.size() == n) {
+            cout << "WAKE UP IN, " << years << ", YEARS\n";
+        } else {
+            cout << "THIS BRAIN NEVER WAKES UP\n";
+        }
+
+        
+        string emptyLine;
+        if (cin.peek() == '\n') {
+            getline(cin, emptyLine);
+        }
+    }
+}
+
+int main() {
+    fastio();
+    int t =1 ; 
+    //cin >> t;
+    while(t--)
+        solve();
+    return 0;
+}

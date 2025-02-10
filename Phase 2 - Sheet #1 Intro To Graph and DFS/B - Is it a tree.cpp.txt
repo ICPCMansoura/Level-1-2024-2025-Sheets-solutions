@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define Sonic ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define int long long
+
+const int mod = 1e9 + 7;
+
+vector<vector<int>>adj;
+vector<int> vis;
+
+void DFS (int u) {
+    vis[u] = 1;
+    for (auto v: adj[u]) {
+        if (!vis[v]) {
+            DFS(v);
+        }
+    }
+}
+
+void palmer() {
+    int n, m; cin >> n >> m;
+    adj.assign(n + 1, {});
+    vis.assign(n + 1, 0);
+    for(int i = 0; i < m; i++) {
+        int u, v; cin >> u >> v;
+        adj[v].push_back(u);
+        adj[u].push_back(v);
+    }
+    int ans = 0;
+    for(int i = 1; i <= n; i++) {
+        if(!vis[i]) {
+            DFS(i);
+            ++ans;
+        }
+    }
+    if (m == n - ans)
+        cout << "YES\n";
+
+    else
+        cout << "NO\n";
+
+}
+
+signed main() {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    Sonic
+    int t = 1; //cin >> t;
+    while (t--){
+        palmer();
+        if (t > 0)
+            cout << "\n";
+    }
+}

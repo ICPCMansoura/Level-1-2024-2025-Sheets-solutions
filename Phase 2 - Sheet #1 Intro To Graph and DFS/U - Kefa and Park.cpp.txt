@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+// make sure modify 0LL + , 1LL * , overflow when remove define
+#define int long long
+#define _3bkarm cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
+
+int n, m;
+vector<int> a;
+vector<vector<int>> adj;
+
+int ans;
+void dfs(int u, int p, int d) {
+    if (d > m) {
+        return;
+    }
+    if ( p != - 1 and (int)adj[u].size() == 1 ) {
+        ++ans; return;
+    }
+    for (int ch : adj[u]) {
+        if (ch != p) {
+            dfs( ch, u, (a[ch] == 1) ? (d + 1) : (0) );
+        }
+    }
+}
+
+void get_shit_done() {
+    cin >> n >> m;
+
+    a.assign(n, 0);
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+    }
+
+    adj.assign(n, {});
+    for (int i = 0, u, v; i < n - 1; ++i) {
+        cin >> u >> v;
+        --u, --v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    ans = 0;
+    dfs( 0, -1, a[0] );
+
+    cout << ans;
+}
+
+signed main() {
+    _3bkarm
+
+    int ts = 1;
+//    cin >> ts;
+    while (ts--) {
+        get_shit_done();
+    }
+
+    return 0;
+}

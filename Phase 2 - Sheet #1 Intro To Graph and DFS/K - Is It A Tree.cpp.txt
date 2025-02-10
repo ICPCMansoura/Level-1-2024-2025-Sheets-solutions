@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void fastio() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+}
+
+map<int, vector<int>> adjList;
+unordered_set<int> visited;
+unordered_set<int> nodes_cnt;
+unordered_map<int, int> freq_edge;
+bool has_cycle = false;
+
+void dfs(int node, int parent) {
+    visited.insert(node);
+
+    for (int neighbor : adjList[node]) {
+        if (neighbor == parent) 
+            continue;
+        if (visited.find(neighbor) != visited.end())
+            has_cycle = true;
+        else
+            dfs(neighbor, node);
+    }
+}
+
+bool is_tree() {
+    if (nodes_cnt.empty())
+        return true;
+
+    int root_cnt = 0;
+    for (int node : nodes_cnt)
+        if (freq_edge.find(node) == freq_edge.end()) 
+            root_cnt++;
+    
+    if (root_cnt != 1) 
+        return false;
+
+    visited.clear();
+    has_cycle = false;
+    int start_node = *nodes_cnt.begin();
+    dfs(start_node, -1);
+    return (visited.size() == nodes_cnt.size() && !has_cycle);
+}
+
+void solve() {
+    int u, v, t = 0;
+
+    while (cin >> u >> v) {
+        if (u == -1 && v == -1)
+            return;
+        if (u == 0 && v == 0) {
+            t++;
+            bool is_a_tree = is_tree();
+            is_a_tree ? cout << "Case " << t << " is a tree.\n" : cout << "Case " << t << " is not a tree.\n";
+
+            adjList.clear();
+            nodes_cnt.clear();
+            freq_edge.clear();
+            visited.clear();
+            has_cycle = false;
+            continue;
+        }
+
+        adjList[u].push_back(v), adjList[v].push_back(u);
+        nodes_cnt.insert(u), nodes_cnt.insert(v);
+        freq_edge[v]++;
+    }
+}
+
+int main() {
+    fastio();
+    solve();
+    return 0;
+}

@@ -1,0 +1,69 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+void fastio() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+}
+
+vector<vector<int>> adj;
+vector<bool> visited;
+
+void solve() {
+    int n;cin >> n;
+    
+    vector<int> p(n + 1), child(n + 1, 0);
+    adj.assign(n + 1, vector<int>());  
+    visited.assign(n + 1, false);      
+    
+    int root = -1;
+
+    for (int i = 1; i <= n; i++) {
+        cin >> p[i];
+        if (p[i] == i) {
+            root = i;  
+        } else {
+            adj[p[i]].push_back(i);
+            child[p[i]]++;  
+        }
+    }
+
+    vector<vector<int>> paths;
+
+    
+    for (int i = 1; i <= n; i++) {
+        if (child[i] == 0 && !visited[i]) {
+            vector<int> path;
+            int node = i;
+            while (!visited[node]) {  
+                path.push_back(node);
+                visited[node] = true;
+                if (node == root) break;
+                node = p[node];
+            }
+            reverse(path.begin(), path.end()); //to be up to down
+            paths.push_back(path);
+        }
+    }
+
+    
+    cout << paths.size() << endl;
+    for (auto& path : paths) {
+        cout << path.size() << endl;
+        for (int node : path) cout << node << " ";
+        cout << endl;
+    }
+    cout <<endl;
+}
+
+int main() {
+    fastio();
+    int t;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
+    return 0;
+}

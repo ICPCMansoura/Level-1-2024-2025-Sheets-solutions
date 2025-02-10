@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+#define endl '\n'
+#define int long long
+
+void Tatakea() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+}
+
+vector<vector<int>> adj;
+vector<int> height;
+vector<int> vis;
+int ans = 0;
+
+void DFS(int u) {
+    vis[u] = 1;
+    bool flag = true;
+
+    for (auto v : adj[u]) {
+        if (height[u] <= height[v]) {
+            flag = false;
+        }
+        if (!vis[v]) {
+            DFS(v);
+        }
+    }
+
+    if (flag) {
+        ans++;
+    }
+}
+
+signed main() {
+    Tatakea();
+
+    int n, m; cin >> n >> m;
+
+    adj.assign(n + 1, {});
+    height.assign(n + 1, 0);
+    vis.assign(n + 1, 0);
+
+    for (int i = 1; i <= n; i++) {
+        cin >> height[i];
+    }
+
+    for (int i = 0; i < m; i++) {
+        int a, b; cin >> a >> b;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+
+
+    for (int i = 1; i <= n; i++) {
+        if (!vis[i]) {
+            DFS(i);
+        }
+    }
+
+    cout << ans << endl;
+
+    return 0;
+}

@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define Sonic ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define int long long
+
+const int mod = 1e9 + 7;
+
+vector<set<int>>adj;
+vector<int> vis;
+int cnt = 1;
+
+void DFS (int u) {
+    vis[u] = 1;
+    for (auto v: adj[u]) {
+        if (!vis[v]) {
+            cnt++;
+            DFS(v);
+        }
+    }
+}
+
+void palmer() {
+    int n, m; cin >> n >> m;
+    adj.assign(n + 1, {});
+    vis.assign(n + 1, 0);
+    map<int, int> freq;
+    for(int i = 0; i < m; i++) {
+        int u, v; cin >> u >> v;
+        adj[v].insert(u);
+        adj[u].insert(v);
+    }
+    for (auto it : adj) {
+        freq[it.size()]++;
+    }
+    if (freq[1] == 2 && freq[2] == n - 2) {
+        cout << "bus topology\n";
+    }
+    else if (freq[2] == n) {
+        cout << "ring topology\n";
+    }
+    else if (freq[1] == n - 1 && freq[n - 1] == 1) {
+        cout << "star topology\n";
+    }
+    else {
+        cout << "unknown topology\n";
+    }
+}
+
+signed main() {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    Sonic
+    int t = 1; //cin >> t;
+    while (t--){
+        palmer();
+        if (t > 0)
+            cout << "\n";
+    }
+}

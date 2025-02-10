@@ -1,0 +1,98 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+// make sure modify 0LL + , 1LL * , overflow when remove define
+#define int long long
+#define _3bkarm cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
+
+int tc = 1;
+
+vector<bool> visited;
+vector<vector<int>> adj;
+vector<vector<int>> teams;
+
+vector<int> team;
+void dfs(int at) {
+    team.push_back(at);
+    visited[at] = true;
+    for (int ch : adj[at]) {
+        if (not visited[ch]) {
+            dfs(ch);
+        }
+    }
+}
+
+void get_shit_done() {
+    int n, m;
+    cin >> n >> m;
+
+    adj.assign(n, {});
+    for (int i = 0, u, v; i < m; ++i) {
+        cin >> u >> v;
+        --u, --v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    visited.assign(n, false);
+    vector<vector<int>> t[4];
+    for (int i = 0; i < n; ++i) {
+        if (not visited[i]) {
+            dfs(i);
+            if ( (int)team.size() <= 3 ) {
+                t[ (int)team.size() ].push_back(team);
+                team.clear();
+            } else {
+                cout << -1;
+                return;
+            }
+        }
+    }
+
+    if ( (int)t[1].size() < (int)t[2].size() ) {
+        cout << -1;
+        return;
+    }
+
+    while ( not t[2].empty() ) {
+        vector<int> c = t[2].back();
+        t[2].pop_back();
+        c.push_back( t[1].back().front() );
+        t[1].pop_back();
+        t[3].push_back(c);
+    }
+
+    if ( (int)t[1].size() % 3 != 0 ) {
+        cout << -1;
+        return;
+    }
+
+    while ( not t[1].empty() ) {
+        vector<int> c;
+        for (int i = 0; i < 3; ++i) {
+            c.push_back( t[1].back().front() );
+            t[1].pop_back();
+        }
+        t[3].push_back(c);
+    }
+
+    for (auto out : t[3]) {
+        for (int u : out) {
+            cout << u + 1 << ' ';
+        }
+        cout << '\n';
+    }
+}
+
+signed main() {
+    _3bkarm
+
+    int ts = 1;
+//    cin >> ts;
+    while (ts--) {
+        get_shit_done();
+    }
+
+    return 0;
+}

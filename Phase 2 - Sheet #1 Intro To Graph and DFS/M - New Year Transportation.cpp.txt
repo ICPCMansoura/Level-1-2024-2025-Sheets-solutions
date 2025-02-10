@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define endl '\n'
+#define int long long
+
+void Tatakea() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+}
+
+vector<vector<int>> adj;
+vector<int> vis;
+vector<int> ans;
+vector<int> ungrouped;
+int len = 0;
+
+void DFS(int u) {
+    vis[u] = 1;
+    ans.push_back(u);
+    len++;
+
+    for (auto v : adj[u]) {
+        if (!vis[v]) {
+            DFS(v);
+        }
+    }
+}
+
+signed main() {
+
+    Tatakea();
+
+    int n, t; cin >> n >> t;
+    vector<int> v(n);
+    
+    for (int i = 1; i < n; i++) {
+        cin >> v[i];
+    }
+    
+    int pos = 1; 
+    while (pos < t) {
+        pos += v[pos]; 
+    }
+    
+    if (pos == t) {
+        cout << "YES" << endl;
+    }
+    else {
+        cout << "NO" << endl;
+    }
+
+
+    return 0;
+}

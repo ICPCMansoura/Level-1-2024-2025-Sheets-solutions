@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+// make sure modify 0LL + , 1LL * , overflow when remove define
+#define int long long
+#define _3bkarm cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
+
+int tc = 1;
+
+vector<bool> visited;
+vector<vector<int>> adj;
+
+int c;
+void dfs(int at) {
+    ++c;
+    visited[at] = true;
+    for (int ch : adj[at]) {
+        if (not visited[ch]) {
+            dfs(ch);
+        }
+    }
+}
+
+void get_shit_done() {
+    int n, m;
+    cin >> n >> m;
+
+    adj.assign(n, {});
+    for (int i = 0, u, v; i < m; ++i) {
+        cin >> u >> v;
+        --u, --v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    if (n != m) {
+        cout << "NO";
+        return;
+    }
+
+    c = 0;
+    visited.assign(n, false);
+    dfs(0);
+
+    if (c == n) {
+        cout << "FHTAGN!";
+    } else {
+        cout << "NO";
+    }
+}
+
+signed main() {
+    _3bkarm
+
+    int ts = 1;
+//    cin >> ts;
+    while (ts--) {
+        get_shit_done();
+    }
+
+    return 0;
+}

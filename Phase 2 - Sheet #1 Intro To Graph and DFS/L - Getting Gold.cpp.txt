@@ -1,0 +1,76 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define nl '\n'
+
+void fastio() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+}
+
+int r, c;
+vector<vector<char>> grid;
+vector<vector<bool>> visited;
+int gold;
+
+bool in_bounds(int x, int y) {
+    return x >= 0 && x < r && y >= 0 && y < c;
+}
+
+bool has_trap(int x, int y) {
+    return (in_bounds(x + 1, y) && grid[x + 1][y] == 'T') ||
+        (in_bounds(x - 1, y) && grid[x - 1][y] == 'T') ||
+        (in_bounds(x, y + 1) && grid[x][y + 1] == 'T') ||
+        (in_bounds(x, y - 1) && grid[x][y - 1] == 'T');
+}
+
+void dfs(int x, int y) {
+    if (!in_bounds(x, y) || visited[x][y] || grid[x][y] == '#') {
+        return;
+    }
+
+    visited[x][y] = true;
+    if (grid[x][y] == 'G') {
+        gold++;
+    }
+
+    if (has_trap(x, y)) {
+        return;
+    }
+    dfs(x + 1, y);
+    dfs(x - 1, y);
+    dfs(x, y + 1);
+    dfs(x, y - 1);
+}
+
+void solve() {
+    while (cin >> c >> r) {
+        grid.assign(r, vector<char>(c));
+        visited.assign(r, vector<bool>(c, false));
+        gold = 0;
+
+        int start_x = -1, start_y = -1;
+
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                cin >> grid[i][j];
+                if (grid[i][j] == 'P') {
+                    start_x = i;
+                    start_y = j;
+                }
+            }
+        }
+
+        if (start_x != -1 && start_y != -1) {
+            dfs(start_x, start_y);
+        }
+
+        cout << gold << nl;
+    }
+}
+
+int main() {
+    fastio();
+    solve();
+    return 0;
+}

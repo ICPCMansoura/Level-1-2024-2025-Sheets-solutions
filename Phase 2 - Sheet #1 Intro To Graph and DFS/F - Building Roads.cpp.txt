@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define Sonic ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define int long long
+
+const int mod = 1e9 + 7;
+
+vector<vector<int>> vis;
+vector<string> board;
+int n, m;
+int dx_all[8] = {1, 0, -1, 0, 1, 1, -1, -1},
+    dy_all[8] = {0, 1, 0, -1, -1, 1, -1, 1};
+int dx[4] = {0, 1, -1, 0},
+    dy[4] = {1, 0, 0, -1};
+void DFS(int i, int j) {
+    vis[i][j] = 1;
+    for (int k = 0; k < 4; k++) {
+        int newI, newJ;
+        newI = i + dx[k];
+        newJ = j + dy[k];
+        if (newI >= 0 && newI < n && newJ >= 0 && newJ < m) {
+            if (!vis[newI][newJ] && board[newI][newJ] == '.') {
+                DFS(newI, newJ);
+            }
+        }
+    }
+}
+
+void palmer() {
+    cin >> n >> m;
+    vis.assign(n, vector<int>(m, 0));
+    board.assign(n, "");
+    for (int i = 0; i < n; i++)
+        cin >> board[i];
+
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (board[i][j] == '.' && !vis[i][j]) {
+                ans++;
+                DFS(i, j);
+            }
+        }
+    }
+    cout << ans;
+}
+
+signed main() {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    Sonic
+    int t = 1; //cin >> t;
+    while (t--){
+        palmer();
+        if (t > 0)
+            cout << "\n";
+    }
+}

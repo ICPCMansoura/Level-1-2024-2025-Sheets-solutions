@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+// make sure modify 0LL + , 1LL * , overflow when remove define
+#define int long long
+#define _3bkarm cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
+
+int n;
+map< pair<int, int>, int > ans;
+vector<vector<int>> adj;
+
+void dfs(int u, int p, int last) {
+    for (int ch : adj[u]) {
+        if (ch != p) {
+            ans[{ min(u, ch), max(u, ch) }] = 5 - last;
+            dfs( ch, u, 5 - last  );
+        }
+    }
+}
+
+void get_shit_done() {
+    cin >> n;
+
+    bool can = true;
+    adj.assign(n, {});
+    vector<pair<int, int>> edge(n - 1);
+    for (int i = 0, u, v; i < n - 1; ++i) {
+        cin >> u >> v;
+        --u, --v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+        if ( (int)adj[u].size() > 2 or (int)adj[v].size() > 2 ) {
+            can = false;
+        }
+        edge[i] = { min(u, v), max(u, v) };
+    }
+
+    if (not can) {
+        cout << -1 << '\n';
+        return;
+    }
+
+    int root = -1;
+    for (int i = 0; i < n; ++i) {
+        if ( (int)adj[i].size() == 1 ) {
+            root = i;
+            break;
+        }
+    }
+
+    dfs( root, -1, 2 );
+
+    for (int i = 0; i < n - 1; ++i) {
+        cout << ans[edge[i]] << ' ';
+    }
+    cout << '\n';
+}
+
+signed main() {
+    _3bkarm
+
+    int ts = 1;
+    cin >> ts;
+    while (ts--) {
+        get_shit_done();
+    }
+
+    return 0;
+}
