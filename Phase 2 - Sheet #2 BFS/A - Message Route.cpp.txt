@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define Sonic ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define int long long
+
+const int mod = 1e9 + 7;
+int n, m;
+vector<vector<int>> adj;
+vector<int> vis, levels, parents;
+
+void BFS(int start) {
+    queue<int> q;
+    q.push(start);
+    vis[start] = 1;
+    levels[start] = 0;
+    while (!q.empty()) {
+        int cur = q.front();
+        q.pop();
+        for (auto child: adj[cur]) {
+            if (!vis[child]) {
+                parents[child] = cur;
+                q.push(child);
+                vis[child] = 1;
+                levels[child] = levels[cur] + 1;
+            }
+        }
+    }
+}
+
+void palmer() {
+    cin >> n >> m;
+    vis.resize(n + 1);
+    levels.resize(n + 1);
+    adj.resize(n + 1);
+    parents.resize(n + 1);
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    BFS(1);
+    if (!vis[n]) {
+        cout << "IMPOSSIBLE";
+        return;
+    }
+    vector<int> path;
+    int cur = n;
+    while (cur != 1) {
+        path.push_back(cur);
+        cur = parents[cur];
+    }
+    path.push_back(1);
+    reverse(path.begin(), path.end());
+    cout << path.size() << "\n";
+    for (auto x: path)
+        cout << x << " ";
+
+}
+
+signed main() {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    Sonic
+    int t = 1; //cin >> t;
+    while (t--){
+        palmer();
+        if (t > 0)
+            cout << "\n";
+    }
+}

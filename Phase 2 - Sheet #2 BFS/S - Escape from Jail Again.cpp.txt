@@ -1,0 +1,130 @@
+#define _USE_MATH_DEFINES
+#include <bits/stdc++.h>
+
+using namespace std;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+void fileIO(void) {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+#ifdef ONLINE_JUDGE
+    //    freopen("walls.in", "r", stdin);
+#endif
+}
+
+void fastIO(void) {
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+}
+
+#define endl '\n'
+typedef long long ll;
+#define int ll
+typedef long double ld;
+
+#define all(a)   a.begin(),a.end()
+#define all_r(a)   a.rbegin(),a.rend()
+#define flsh cout.flush()
+
+#define N (ll)(2e5 + 5)
+#define MOD (ll)(1e9 + 7)
+const long long oo = 1e18;
+const ld EPS = 1e-8;
+const int mod = 1e9 + 7;
+
+struct state{
+    int x, y;
+    bool isClosed; // 1 closed, 0 open
+};
+
+int n, m;
+
+int dx[4] = { 1, 0, -1, 0 },
+        dy[4] = { 0, 1, 0, -1 };
+
+bool valid(int i, int j){
+    return i >= 0 && j >= 0 && i < n && j < m;
+}
+
+void solve(){
+    while (cin >> n >> m && n != -1){
+        vector<vector<char>> grid(n, vector<char>(m));
+
+        int x, y;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                cin >> grid[i][j];
+                if(grid[i][j] == 'H'){
+                    x = i, y = j;
+                    grid[i][j] = '.';
+                }
+            }
+        }
+
+        vector<vector<vector<int>>> dist(n, vector<vector<int>>(m, vector<int>(2, oo)));
+        queue<state> q;
+
+        q.push({x, y, 1});
+        dist[x][y][1] = 0;
+
+        while (q.size()){
+            auto [i, j, isClosed] = q.front();
+            q.pop();
+            int d = dist[i][j][isClosed];
+
+            for (int k = 0; k < 4; ++k) {
+                int nx = i + dx[k], ny = j + dy[k];
+                if(!valid(nx, ny) || grid[nx][ny] == 'W')
+                    continue;
+
+                if(grid[nx][ny] == '.'){
+                    if(dist[nx][ny][isClosed] == oo){
+                        dist[nx][ny][isClosed] = d + 1;
+                        q.push({nx, ny, isClosed});
+                    }
+                }
+                else if(grid[nx][ny] == 'O'){
+                    if(dist[nx][ny][0] == oo){
+                        dist[nx][ny][0] = d + 1;
+                        q.push({nx, ny, 0});
+                    }
+                }
+                else if(grid[nx][ny] == 'C'){
+                    if(dist[nx][ny][1] == oo){
+                        dist[nx][ny][1] = d + 1;
+                        q.push({nx, ny, 1});
+                    }
+                }
+                else if(!isClosed){
+                    if(dist[nx][ny][0] == oo){
+                        dist[nx][ny][0] = d + 1;
+                        q.push({nx, ny, 0});
+                    }
+                }
+            }
+        }
+
+        int ans = oo;
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if(i == n - 1 || j == m - 1 || i == 0 || j == 0){
+                    ans = min({ans, dist[i][j][0] + 1 , dist[i][j][1] + 1});
+                }
+            }
+        }
+
+        cout << (ans == oo ? -1 : ans) << endl;
+    }
+}
+
+signed main() {
+    fastIO(); fileIO();
+    cout << fixed << setprecision(9);
+    int test = 1, t = 1; //cin>>test;
+    while (test--) {
+//        cout << "Case #" << t << ": ";
+        solve();
+        t++;
+    }
+}

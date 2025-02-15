@@ -1,0 +1,76 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define Sonic ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define int long long
+
+const int mod = 1e9 + 7;
+
+int n, m;
+vector<vector<int>> adj;
+vector<int> vis, team;
+
+bool BFS(int start) {
+    queue<int> q;
+    q.push(start);
+    vis[start] = 1;
+    team[start] = 1;
+
+    while (!q.empty()) {
+        int cur = q.front();
+        q.pop();
+
+        for (int child : adj[cur]) {
+            if (!vis[child]) {
+                vis[child] = 1;
+                team[child] = 3 - team[cur];
+                q.push(child);
+            } else if (team[child] == team[cur]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+void palmer() {
+    cin >> n >> m;
+    adj.resize(n + 1);
+    vis.resize(n + 1);
+    team.resize(n + 1);
+
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    bool flag = true;
+    for (int i = 1; i <= n; i++) {
+        if (!vis[i]) {
+            flag &= BFS(i);
+        }
+    }
+    if (!flag) {
+        cout << "IMPOSSIBLE";
+    }
+    else {
+        for (int i = 1; i <= n; i++) {
+            cout << team[i] << " ";
+        }
+    }
+}
+
+signed main() {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    Sonic
+    int t = 1; //cin >> t;
+    while (t--){
+        palmer();
+        if (t > 0)
+            cout << "\n";
+    }
+}

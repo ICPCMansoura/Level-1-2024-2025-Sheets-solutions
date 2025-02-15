@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+#define int long long
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+
+string from , to;
+
+map <char , int> mp;
+int dx[8]={-2,2,-2,2,-1,1,-1,1};
+int dy[8]={-1,-1,1,1,-2,-2,2,2};
+
+int vis[9][9] ,dist[9][9];
+
+
+bool valid(int i , int j) {
+    return i >= 1 and i <= 8 and j >= 1 and j <= 8 and !vis[i][j];
+}
+
+int bfs(int form_i , int from_j , int to_i , int to_j) {
+    queue <pair<int,int>> q;
+
+    q.emplace(form_i , from_j);
+    vis[form_i][from_j] = 1;
+
+
+    while (!q.empty()) {
+        auto [x , y] = q.front();
+        q.pop();
+
+        for (int k = 0; k < 8; ++k) {
+            int nx = dx[k] + x , ny = dy[k] + y;
+            if(valid(nx , ny)) {
+                vis[nx][ny] = 1;
+                dist[nx][ny] = 1 + dist[x][y];  
+                q.emplace(nx , ny);
+            }
+        }
+    }
+    return dist[to_i][to_j];
+}
+
+void AC() {
+    while (cin >> from >> to) {
+       
+        int from_i = mp[from[0]] , from_j = mp[from[1]];
+        int to_i = mp[to[0]] , to_j = mp[to[1]];
+
+        int ans = bfs(from_i , from_j , to_i , to_j);
+        cout << "To get from " << from << " to " << to << " takes " << ans << " knight moves.\n";
+
+
+        for (int i = 0; i < 9; ++i)
+            for (int j = 0; j < 9; ++j)
+                vis[i][j] = dist[i][j] = 0;
+
+    }
+}
+
+
+signed main() {
+    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+
+    for (char c = 'a' , cur = 1; c <= 'h'; ++c , ++cur) mp[c] = cur;
+    for (char c = '1' , cur = 1; c <= '8'; ++c , ++cur) mp[c] = cur;
+    int t = 1;
+ 
+    while (t--) {
+        AC();
+    }
+}

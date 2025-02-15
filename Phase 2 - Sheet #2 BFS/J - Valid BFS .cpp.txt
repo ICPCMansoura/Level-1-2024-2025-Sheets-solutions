@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+#define int long long
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+vector <vector<int>> adj;
+vector <int> vis , his_order , idx;
+bool comp(int &i , int &j) {
+    return idx[i] < idx[j];
+}
+
+void AC() {
+    int n , m; cin >> n;
+    m = n - 1;
+    adj.assign(n + 1 , vector<int> ()), idx.assign(n + 1 , 0) , vis.assign(n + 1 , 0) , idx.assign(n + 1 , 0) , his_order.assign(n + 1, 0);
+
+    for (int i = 0; i < m; ++i) {
+        int u , v; cin >> u >> v;
+        adj[u].push_back(v) , adj[v].push_back(u);
+    }
+
+    for (int i = 1; i <= n; ++i) cin >> his_order[i] , idx[his_order[i]] = i;
+
+    for (auto &vec : adj) {
+        sort(vec.begin() , vec.end() , comp);
+    }
+    queue <int> q;
+    q.push(1);
+    vector <int> my_order;
+    my_order.push_back(0);
+    vis[1] = 1;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        my_order.push_back(u);
+
+        for (auto &v : adj[u]) {
+            if(!vis[v]) q.push(v) , vis[v] = 1;
+        }
+    }
+    
+    if(my_order == his_order) cout << "YES\n";
+    else cout << "NO\n";
+
+}
+
+
+signed main() {
+    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+
+    int t = 1;
+    while (t--) {
+        AC();
+    }
+}

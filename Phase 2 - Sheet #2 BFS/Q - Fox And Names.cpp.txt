@@ -1,0 +1,93 @@
+#define _USE_MATH_DEFINES
+#include <bits/stdc++.h>
+
+using namespace std;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+void fileIO(void) {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+#ifdef ONLINE_JUDGE
+    //    freopen("walls.in", "r", stdin);
+#endif
+}
+
+void fastIO(void) {
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+}
+
+#define endl '\n'
+typedef long long ll;
+#define int ll
+typedef long double ld;
+
+#define all(a)   a.begin(),a.end()
+#define all_r(a)   a.rbegin(),a.rend()
+#define flsh cout.flush()
+
+#define N (ll)(2e5 + 5)
+#define MOD (ll)(1e9 + 7)
+const long long oo = 1e18;
+const ld EPS = 1e-8;
+const int mod = 1e9 + 7;
+
+vector<vector<int>> adj(26);
+vector<int> inDeg(26);
+
+void solve(){
+    int n; cin >> n;
+    string last; cin >> last;
+
+    for (int i = 0; i < n - 1; ++i) {
+        string s; cin >> s;
+        if(s == last)
+            continue;
+        if(last.size() > s.size() && s == last.substr(0, s.size())){
+            cout << "Impossible";
+            return;
+        }
+        for (int j = 0; j < min(s.size(), last.size()); ++j) {
+            if(s[j] != last[j]){
+                adj[last[j] - 'a'].push_back(s[j] - 'a');
+                inDeg[s[j] - 'a']++;
+                break;
+            }
+        }
+        last = s;
+    }
+
+    queue<int> q;
+    for (int i = 0; i < 26; ++i) {
+        if(!inDeg[i])
+            q.push(i);
+    }
+
+    string ans;
+    while (q.size()){
+        int p = q.front();
+        q.pop();
+
+        ans.push_back(p + 'a');
+        for(auto v : adj[p]){
+            inDeg[v]--;
+            if(!inDeg[v])
+                q.push(v);
+        }
+    }
+
+    cout << (ans.size() == 26 ? ans : "Impossible") << endl;
+
+}
+
+signed main() {
+    fastIO(); fileIO();
+    cout << fixed << setprecision(9);
+    int test = 1, t = 1; //cin>>test;
+    while (test--) {
+//        cout << "Case #" << t << ": ";
+        solve();
+        t++;
+    }
+}

@@ -1,0 +1,101 @@
+#define _USE_MATH_DEFINES
+#include <bits/stdc++.h>
+
+using namespace std;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+void fileIO(void) {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+#ifdef ONLINE_JUDGE
+    //    freopen("walls.in", "r", stdin);
+#endif
+}
+
+void fastIO(void) {
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+}
+
+#define endl '\n'
+typedef long long ll;
+#define int ll
+typedef long double ld;
+
+#define all(a)   a.begin(),a.end()
+#define all_r(a)   a.rbegin(),a.rend()
+#define flsh cout.flush()
+
+#define N (ll)(2e5 + 5)
+#define MOD (ll)(1e9 + 7)
+const long long oo = 1e18;
+const ld EPS = 1e-8;
+const int mod = 1e9 + 7;
+
+int n, m;
+vector<vector<int>> grid;
+int dx[4] = { 1, 0, -1, 0 },
+        dy[4] = { 0, 1, 0, -1 };
+bool valid(int i, int j){
+    return i >= 0&& j >= 0 && i < n && j < m;
+}
+
+vector<vector<int>> bfs(int stX, int stY, int zero){
+    vector<vector<int>> dist(n, vector<int>(m, oo));
+    deque<pair<int, int>> dq;
+
+    dist[stX][stY] = 0;
+    dq.push_back({stX, stY});
+
+    while (dq.size()){
+        auto [x, y] = dq.front();
+        dq.pop_front();
+
+        for (int i = 0; i < 4; ++i) {
+            int nx = x + dx[i], ny = y + dy[i];
+            if(valid(nx, ny) && (grid[x][y] == 3 || grid[x][y] == zero) && dist[nx][ny] > dist[x][y]){
+                dist[nx][ny] = dist[x][y];
+                dq.push_front({nx, ny});
+            }
+            if(valid(nx, ny) && (grid[x][y] != 3 && grid[x][y] != zero) && dist[nx][ny] > dist[x][y] + 1){
+                dist[nx][ny] = dist[x][y] + 1;
+                dq.push_back({nx, ny});
+            }
+        }
+    }
+    return dist;
+}
+
+void solve(){
+    cin >> n >> m;
+    grid.assign(n, vector<int>(m));
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            cin >> grid[i][j];
+        }
+    }
+
+    vector<vector<int>> eddard = bfs(0, 0, 2);
+    vector<vector<int>> partner = bfs(n - 1, m - 1, 1);
+
+    int ans = oo;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            ans = min(ans, eddard[i][j] + partner[i][j]);
+        }
+    }
+
+    cout << ans << endl;
+}
+
+signed main() {
+    fastIO(); fileIO();
+    cout << fixed << setprecision(9);
+    int test = 1, t = 1; cin>>test;
+    while (test--) {
+//        cout << "Case #" << t << ": ";
+        solve();
+        t++;
+    }
+}

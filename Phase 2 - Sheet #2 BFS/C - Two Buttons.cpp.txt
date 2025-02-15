@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define Sonic ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define int long long
+
+const int mod = 1e9 + 7;
+int n, m;
+map<int, int> levels, vis;
+
+int BFS(int root) {
+    queue<int> q;
+    q.push(root);
+    levels[root] = 0;
+    vis[root] = 1;
+    while (!q.empty()) {
+        int cur = q.front();
+        if (cur == m)
+            return levels[m];
+
+        q.pop();
+        if (cur > 0 && !vis[cur - 1]) {
+            q.push(cur - 1);
+            levels[cur - 1] = levels[cur] + 1;
+            vis[cur - 1] = 1;
+        }
+        if (cur < m && !vis[cur * 2]) {
+            q.push(cur * 2);
+            levels[cur * 2] = levels[cur] + 1;
+            vis[cur * 2] = 1;
+        }
+    }
+}
+
+void palmer() {
+    cin >> n >> m;
+    cout << BFS(n);
+}
+
+signed main() {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    Sonic
+    int t = 1; //cin >> t;
+    while (t--){
+        palmer();
+        if (t > 0)
+            cout << "\n";
+    }
+}

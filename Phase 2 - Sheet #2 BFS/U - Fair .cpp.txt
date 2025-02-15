@@ -1,0 +1,108 @@
+#define _USE_MATH_DEFINES
+#include <bits/stdc++.h>
+
+using namespace std;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+void fileIO(void) {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+#ifdef ONLINE_JUDGE
+    //    freopen("walls.in", "r", stdin);
+#endif
+}
+
+void fastIO(void) {
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+}
+
+#define endl '\n'
+typedef long long ll;
+#define int ll
+typedef long double ld;
+
+#define all(a)   a.begin(),a.end()
+#define all_r(a)   a.rbegin(),a.rend()
+#define flsh cout.flush()
+
+#define N (ll)(2e5 + 5)
+#define MOD (ll)(1e9 + 7)
+const long long oo = 1e18;
+const ld EPS = 1e-8;
+const int mod = 1e9 + 7;
+
+int n, m, k, s;
+vector<int> a;
+vector<vector<int>> adj;
+
+vector<int> bfs(int good){
+    queue<int> q;
+    vector<int> dist(n + 1, oo);
+    for (int i = 1; i <= n; ++i) {
+        if(a[i] == good){
+            q.push(i);
+            dist[i] = 0;
+        }
+    }
+
+    while (q.size()){
+        int p = q.front();
+        q.pop();
+
+        for(auto v : adj[p]){
+            if(dist[v] == oo){
+                dist[v] = dist[p] + 1;
+                q.push(v);
+            }
+        }
+    }
+    return dist;
+}
+
+void solve(){
+    cin >> n >> m >> k >> s;
+    adj.assign(n + 1, {});
+    a.assign(n + 1, 0);
+    for (int i = 1; i <= n; ++i) {
+        cin >> a[i];
+    }
+
+    for (int i = 0; i < m; ++i) {
+        int u, v; cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    //dits[k][i] -> connect node i with good of type k
+    vector<vector<int>> dist(k + 1, vector<int>(n + 1, oo));
+    for (int i = 1; i <= k; ++i) {
+        dist[i] = bfs(i);
+    }
+
+    for (int i = 1; i <= n; ++i) {
+        vector<int> tot;
+        for (int j = 1; j <= k; ++j) {
+            tot.push_back(dist[j][i]);
+        }
+        sort(all(tot));
+
+        int ans = 0;
+        for (int j = 0; j < s; ++j) {
+            ans += tot[j];
+        }
+        cout << ans << " ";
+    }
+}
+
+signed main() {
+    fastIO(); fileIO();
+    cout << fixed << setprecision(9);
+    int test = 1, t = 1; //cin>>test;
+    while (test--) {
+//        cout << "Case #" << t << ": ";
+        solve();
+        t++;
+    }
+}

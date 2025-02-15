@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define Sonic ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define int long long
+
+const int mod = 1e9 + 7;
+int n, m;
+vector<vector<int>> adj;
+vector<int> vis, levels, parent, path;
+
+void BFS() {
+    priority_queue<int, vector<int>, greater<int>> q;
+    for (int i = 1; i <= n; i++) {
+        if (parent[i] == 0) {
+            q.push(i);
+            vis[i] = 1;
+        }
+    }
+    while (!q.empty()) {
+        int cur = q.top();
+        q.pop();
+        path.push_back(cur);
+        for (auto child: adj[cur]) {
+            parent[child]--;
+            if (!vis[child]) {
+                if (parent[child] == 0) {
+                    q.push(child);
+                    vis[child] = 1;
+                }
+            }
+        }
+    }
+}
+
+void palmer() {
+    cin >> n >> m;
+    vis.resize(n + 1);
+    levels.resize(n + 1);
+    adj.resize(n + 1);
+    parent.resize(n + 1);
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        parent[v]++;
+    }
+    BFS();
+    if (path.size() != n) {
+        cout << "Sandro fails.";
+        return;
+    }
+
+    for (int node : path)
+        cout << node << " ";
+
+}
+
+signed main() {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    Sonic
+    int t = 1; //cin >> t;
+    while (t--){
+        palmer();
+        if (t > 0)
+            cout << "\n";
+    }
+}

@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define endl '\n'
+#define int long long
+
+void Tatakea() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+}
+
+int n, m;
+vector<vector<int>> graph;
+vector<int> vis, color;
+vector<int> cnt;
+
+
+int bfs(int start){
+    queue<int> q;
+    q.push(start);
+    vis[start] = 1;
+    color[start] = 1;
+    cnt[start]++;;
+
+    while(!q.empty()){
+        int cur = q.front();
+        q.pop();
+
+        for (auto ch: graph[cur]) {
+            if (!vis[ch]) {
+                q.push(ch);
+                vis[ch] = 1;
+                color[ch] = 3 - color[cur];
+                cnt[color[ch]]++;;
+            }
+            else {
+                if (color[cur] == color[ch]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+signed main() {
+    Tatakea();
+
+    cin >> n;
+    graph.resize(n+1);
+    vis.resize(n+1);
+    color.resize(n+1);
+    cnt.resize(3);
+
+    int u, v;
+    for (int i = 0; i < n - 1; i++) {
+        cin >> u >> v;
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+
+    bool flag = true;
+    for (int i = 1; i <= n; i++) {
+        if (!vis[i]) {
+            flag &= bfs(i);
+        }
+    }
+
+    cout << cnt[2] * cnt[1] - (n - 1) << endl;
+
+    return 0;
+}

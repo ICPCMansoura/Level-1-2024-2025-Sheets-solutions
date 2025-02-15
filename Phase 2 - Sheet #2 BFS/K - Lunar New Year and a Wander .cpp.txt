@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+#define int long long
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+
+void AC() {
+    int n , m; cin >> n >> m;
+    vector <vector<int>> adj(n + 1 , vector<int> ());
+
+    for (int i = 0; i < m; ++i) {
+        int u , v; cin >> u >> v;
+        adj[u].push_back(v) , adj[v].push_back(u);
+    }
+
+    vector <int> vis(n + 1 , 0);
+
+    priority_queue <int> pq;
+    pq.push(-1);
+    vis[1] = 1;
+    while (!pq.empty()) {
+        int u = -pq.top();
+        pq.pop();
+        cout << u << ' ';
+
+        for (int v : adj[u]) {
+            if(!vis[v]) {
+                vis[v] = 1;
+                pq.push(-v);
+            }
+        }
+    }
+    cout << '\n';
+}
+
+
+signed main() {
+    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+
+    int t = 1;
+ //   cin >> t;
+    while (t--) {
+        AC();
+    }
+}

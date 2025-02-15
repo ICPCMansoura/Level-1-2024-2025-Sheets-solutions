@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define endl '\n'
+#define int long long
+
+void Tatakea() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+}
+
+int n, m;
+vector<vector<int>> graph;
+vector<int> vis, color;
+
+
+int bfs(int start){
+    queue<int> q;
+    q.push(start);
+    vis[start] = 1;
+    color[start] = 1;
+
+    while(!q.empty()){
+        int cur = q.front();
+        q.pop();
+
+        for (auto ch: graph[cur]) {
+            if (!vis[ch]) {
+                q.push(ch);
+                vis[ch] = 1;
+                color[ch] = 3 - color[cur];
+            }
+            else {
+                if (color[cur] == color[ch]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+signed main() {
+    Tatakea();
+
+    int t; cin >> t;
+    for (int test = 1; test <= t; test++) {
+        cin >> n >> m;
+        graph.assign(n + 1, vector<int>());
+        vis.assign(n + 1, 0);
+        color.assign(n + 1, 0);
+
+
+        int u, v;
+        for (int i = 0; i < m; i++) {
+            cin >> u >> v;
+            graph[u].push_back(v);
+            graph[v].push_back(u);
+        }
+
+        bool flag = true;
+        for (int i = 1; i <= n; i++) {
+            if (color[i] == 0) {
+                if (!bfs(i)) {
+                    flag = false;
+                    break;
+                }
+            }
+        }
+
+        cout << "Scenario #" << test << ":" << endl;
+        if (flag) {
+            cout << "No suspicious bugs found!" << endl;
+        } else {
+            cout << "Suspicious bugs found!" << endl;
+        }
+    }
+
+
+
+    return 0;
+}

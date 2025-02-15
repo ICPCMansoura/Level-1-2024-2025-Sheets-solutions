@@ -1,0 +1,91 @@
+#define _USE_MATH_DEFINES
+#include <bits/stdc++.h>
+
+using namespace std;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+void fileIO(void) {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+#ifdef ONLINE_JUDGE
+    //    freopen("walls.in", "r", stdin);
+#endif
+}
+
+void fastIO(void) {
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+}
+
+#define endl '\n'
+typedef long long ll;
+#define int ll
+typedef long double ld;
+
+#define all(a)   a.begin(),a.end()
+#define all_r(a)   a.rbegin(),a.rend()
+#define flsh cout.flush()
+
+#define N (ll)(2e5 + 5)
+#define MOD (ll)(1e9 + 7)
+const long long oo = 1e18;
+const ld EPS = 1e-8;
+const int mod = 1e9 + 7;
+
+map<pair<int, int>, vector<pair<int, int>>> adj;
+int dx_all[8] = { 1, 0, -1, 0, 1, 1, -1, -1 },
+        dy_all[8] = { 0, 1, 0, -1, -1, 1, -1, 1 };
+void solve(){
+    int x0, y0, x1, y1;
+    cin >> x0 >> y0 >> x1 >> y1;
+    int n; cin >> n;
+
+    for (int i = 0; i < n; ++i) {
+        int r, a, b; cin >> r >> a >> b;
+        for (int j = a; j <= b; ++j) {
+            adj[{r, j}];
+        }
+
+        for (int j = a; j <= b; ++j) {
+            for (int k = 0; k < 8; ++k) {
+                int nx = r + dx_all[k], ny = j + dy_all[k];
+                if(adj.count({nx, ny})){
+                    adj[{r, j}].push_back({nx , ny});
+                    adj[{nx, ny}].push_back({r , j});
+                }
+            }
+        }
+    }
+
+    queue<pair<int, int>> q;
+    map<pair<int,int>, int> dist;
+
+    q.push({x0, y0});
+    dist[{x0, y0}] = 0;
+
+    while (q.size()){
+        auto p = q.front();
+        q.pop();
+
+        for(auto v : adj[p]){
+            if(!dist.count(v)){
+                dist[v] = dist[p] + 1;
+                q.push(v);
+            }
+        }
+    }
+
+    cout << (dist.count({x1, y1}) ? dist[{x1, y1}] : -1) << endl;
+}
+
+signed main() {
+    fastIO(); fileIO();
+    cout << fixed << setprecision(9);
+    int test = 1, t = 1; //cin>>test;
+    while (test--) {
+//        cout << "Case #" << t << ": ";
+        solve();
+        t++;
+    }
+}

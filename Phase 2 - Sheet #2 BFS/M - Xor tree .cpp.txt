@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+#define int long long
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+vector <vector<int>> adj;
+vector <int> vis , initial , goal;
+int n;
+
+
+vector<int> bfs() {
+    queue <array<int , 4>> q; // node , level , even_flip , odd_flip
+    q.push({1 , 1, 0 , 0});
+
+    vector <int> ans;
+    vis[1] = 1;
+
+    while(!q.empty()) {
+        auto [u , level , even_flip , odd_flip] = q.front();
+        q.pop();
+
+        int inital_value = initial[u] , goal_value = goal[u];
+        if(level & 1) {
+            if(odd_flip) {
+                inital_value = 1 - inital_value;
+            }
+
+            if(inital_value != goal_value) ans.push_back(u) , odd_flip = !odd_flip;
+        } else {
+            if(even_flip) {
+                inital_value = 1 - inital_value;
+            }
+            if(inital_value != goal_value) ans.push_back(u) , even_flip = !even_flip;
+        }
+
+        for (int v : adj[u]) {
+            if(!vis[v]) {
+                vis[v] = 1;
+                q.push({v , level + 1 , even_flip , odd_flip});
+            }
+
+        }
+
+    }
+    return ans;
+}
+
+
+
+void AC() {
+    cin >> n;
+    vis.assign(n + 1 , 0);
+    initial.assign(n + 1 , 0) , goal.assign(n + 1 , 0);
+    adj.assign(n + 1, vector<int> ());
+    for (int i = 0; i < n - 1; ++i) {
+        int u , v; cin >> u >> v;
+        adj[u].push_back(v) , adj[v].push_back(u);
+    }
+    for (int i = 1; i <= n; ++i) cin >> initial[i];
+    for (int i = 1; i <= n; ++i) cin >> goal[i];
+
+    auto ans = bfs();
+    cout << ans.size() << '\n';
+    for (int i : ans) cout << i << '\n';
+}
+
+
+signed main() {
+    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+
+    int t = 1;
+    while (t--) {
+        AC();
+    }
+}

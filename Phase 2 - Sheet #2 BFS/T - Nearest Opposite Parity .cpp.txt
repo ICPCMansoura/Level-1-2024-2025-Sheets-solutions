@@ -1,0 +1,81 @@
+#define _USE_MATH_DEFINES
+#include <bits/stdc++.h>
+
+using namespace std;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+void fileIO(void) {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+#ifdef ONLINE_JUDGE
+    //    freopen("walls.in", "r", stdin);
+#endif
+}
+
+void fastIO(void) {
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+}
+
+#define endl '\n'
+typedef long long ll;
+#define int ll
+typedef long double ld;
+
+#define all(a)   a.begin(),a.end()
+#define all_r(a)   a.rbegin(),a.rend()
+#define flsh cout.flush()
+
+#define N (ll)(2e5 + 5)
+#define MOD (ll)(1e9 + 7)
+const long long oo = 1e18;
+const ld EPS = 1e-8;
+const int mod = 1e9 + 7;
+
+void solve(){
+    int n; cin >> n;
+    vector<int> a(n + 1);
+    vector<vector<int>> adj(n + 1);
+    vector<vector<int>> dist(n + 1, vector<int>(2, oo));
+    queue<pair<int,int>> q;
+
+    for (int i = 1; i <= n; ++i) {
+        cin >> a[i];
+        if(i + a[i] <= n)
+            adj[i + a[i]].push_back(i);
+        if(i - a[i] >= 1)
+            adj[i - a[i]].push_back(i);
+
+        q.push({i, a[i] & 1});
+        dist[i][a[i] & 1] = 0;
+    }
+
+    while (q.size()){
+        auto [pos, parity] = q.front();
+        q.pop();
+
+        for(auto newPos : adj[pos]){
+            if(dist[newPos][parity] == oo){
+                dist[newPos][parity] = dist[pos][parity] + 1;
+                q.push({newPos, parity});
+            }
+        }
+    }
+
+    for (int i = 1; i <= n; ++i) {
+        cout << (dist[i][!(a[i] & 1)] == oo ? -1 : dist[i][!(a[i] & 1)]) << " ";
+    }
+
+}
+
+signed main() {
+    fastIO(); fileIO();
+    cout << fixed << setprecision(9);
+    int test = 1, t = 1; //cin>>test;
+    while (test--) {
+//        cout << "Case #" << t << ": ";
+        solve();
+        t++;
+    }
+}
